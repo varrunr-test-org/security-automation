@@ -25,6 +25,9 @@ jobs:
       with:
         java-version: 1.8
 
+    - name: Python Deps
+      run: apt-get install -y python-pip && pip install requests
+          
     - name: Cache maven artifacts
       uses: actions/cache@v1
       with:
@@ -61,12 +64,6 @@ jobs:
         name: dependency-check-report.json
         # Destination path
         path: ./scripts/dependency-check/results/dependency-check-report.json
-        
-    - name: Notify
-      uses: innocarpe/actions-slack@v1
-      with:
-        status: ${{ job.status }} # Required
-        failure_text: 'Dependency Check Failed 😱 \n Repository: ${{ GITHUB_REPOSITORY }} \n SHA: ${{GITHUB_SHA}}' # Optional
-      env:
-        GITHUB_TOKEN: ${{ secrets.github_token }} # Required
-        SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }} # Required
+              
+    - name: Slack Notify
+      run: python ./scripts/dependency-check/results/parse_dep_check_result.py ${{ secrets.slack_webhook_url }}
