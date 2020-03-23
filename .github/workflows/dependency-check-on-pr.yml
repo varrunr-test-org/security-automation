@@ -61,3 +61,12 @@ jobs:
         name: dependency-check-report.json
         # Destination path
         path: ./scripts/dependency-check/results/dependency-check-report.json
+        
+    - name: Notify
+      uses: innocarpe/actions-slack@v1
+      with:
+        status: ${{ job.status }} # Required
+        failure_text: 'Dependency Check Failed 😱 \n Repository: ${{ GITHUB_REPOSITORY }} \n SHA: ${{GITHUB_SHA}}' # Optional
+      env:
+        GITHUB_TOKEN: ${{ secrets.github_token }} # Required
+        SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook_url }} # Required
