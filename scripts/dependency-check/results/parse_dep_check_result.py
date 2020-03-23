@@ -6,8 +6,7 @@ import json
 import sys
 import requests
 
-print sys.argv
-f = open("dependency-check-report.json", "r")
+f = open(sys.argv[1], "r")
 json_str = f.read()
 
 json_dict = json.loads(json_str)
@@ -35,7 +34,7 @@ def _get_cve_section(cve, severity, score):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "*<https://nvd.nist.gov/vuln/detail/%s|%s>*\n*Severity* : %s\n *CVSS V2*: %s\n"
+                    "text": "*<https://nvd.nist.gov/vuln/detail/%s|%s>*\\n*Severity* : %s\\n *CVSS V2*: %s\\n"
                 }
             }
         """ % (cve, cve, severity, score)
@@ -74,22 +73,28 @@ for dependency in dependencies:
 slack_message = ""
 if (len(cves) > 0):
     cve_section = ""
-    for cve in cves:
-        cve_section += _get_cve_section(cve['name'], cve['severity'], cve['cvssv2']['score']) +\
-                       _get_desc_section(cve['description']) +\
-                       ","
+    for i in range(0, len(cves)):
+        cve_section = cve_section +\
+                      _get_cve_section(cves[i]['name'], cves[i]['severity'], cves[i]['cvssv2']['score']) \
+                      + "," +_get_desc_section(cves[i]['description']);
+        if i != len(cves) - 1:
+            cve_section += ","
 
-    slack_message = """
-    {
-        "blocks": [ %s, %s, %s %s ] 
-    }
-    """ % (_get_title_section(len(cves)),
+    slack_message = """{
+        "channel": "#test-dependency-check-slack",
+        "blocks": [ %s, %s, %s, %s ] 
+    }""" % (_get_title_section(len(cves)),
            _get_divider_section(),
            cve_section,
            _get_divider_section())
 
-    if len(sys.argv == 2):
-        requests.post(sys.argv[1], json.dumps(slack_message))
+    form_data = {'payload' : slack_message}
+    if len(sys.argv) == 3:
+        resp = requests.post(sys.argv[2], data=form_data)
+        if resp.status_code != 200:
+            sys.exit(1)
+
+
 
 
 
