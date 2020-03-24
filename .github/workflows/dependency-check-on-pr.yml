@@ -55,7 +55,7 @@ jobs:
      
     # Run dependency check
     - name: Run Dependency Check
-      run: ./scripts/dependency-check/bin/dependency-check.sh --project "testdep" --scan 'target/*.jar' -o ./scripts/dependency-check/results --format JSON --prettyPrint
+      run: ./scripts/dependency-check/bin/dependency-check.sh --project "testdep" --scan 'target/*.jar' -o ./scripts/dependency-check/results --format JSON --format HTML --suppression ./scripts/dependency-check/suppression-list.xml
       
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
@@ -64,6 +64,6 @@ jobs:
         name: dependency-check-report.json
         # Destination path
         path: ./scripts/dependency-check/results/dependency-check-report.json
-              
+
     - name: Slack Notify
       run: python ./scripts/dependency-check/results/parse_dep_check_result.py ./scripts/dependency-check/results/dependency-check-report.json ${{ secrets.slack_webhook_url }}
