@@ -27,7 +27,11 @@ jobs:
 
     - name: Python Deps
       run: sudo apt-get install -y python-pip && pip install requests
-          
+
+    # Install common-crypto by hand. Temporary hack.
+    - name: Install common-crypto
+      run: mvn install:install-file -Dfile=lib/common-crypto-1.0-SNAPSHOT.jar -DgroupId=com.company.security.crypto -DartifactId=common-crypto -Dversion=1.0-SNAPSHOT -Dpackaging=jar
+
     # Also caches CVE database stored by Dependency-Check
     # Default path is ~/.m2/repository/org/owasp/dependency-check-data/
     - name: Cache maven artifacts
