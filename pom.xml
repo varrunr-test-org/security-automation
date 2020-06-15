@@ -45,7 +45,12 @@
                     <formats>HTML,JSON</formats>
                     <outputDirectory>results</outputDirectory>
                     <prettyPrint>true</prettyPrint>
+                    <!-- Fail if the vulnerability is equal or above a certain CVSS score -->
+                    <failBuildOnCVSS>9</failBuildOnCVSS>
+                    <!--
+                    Enable this setting if you want the GH task to fail if vulnerabilities are present
                     <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                    -->
                 </configuration>
                 <executions>
                     <execution>

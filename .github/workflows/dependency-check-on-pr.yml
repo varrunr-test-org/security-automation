@@ -37,15 +37,7 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
-      
-    # Install common-crypto by hand. Temporary hack.
-    - name: Install common-crypto
-      run: mvn install:install-file -Dfile=lib/common-crypto-1.0-SNAPSHOT.jar -DgroupId=com.company.security.crypto -DartifactId=common-crypto -Dversion=1.0-SNAPSHOT -Dpackaging=jar
-      
-    # Build Project
-    - name: Maven Build
-      run: mvn -T1C clean install  
-     
+
     # Run dependency check
     - name: Run Dependency Check
       run: mvn dependency-check:check
