@@ -7,4 +7,12 @@
         <packageUrl regex="true">^pkg:maven/com\.varrunr\.security\.test/security\-automation@.*$</packageUrl>
         <cve>CVE-2017-15708</cve>
     </suppress>
+    <!-- Suppression for spring-security vulnerability
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-security-core-5.3.3.RELEASE.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-core@.*$</packageUrl>
+        <cve>CVE-2018-1258</cve>
+    </suppress> -->
 </suppressions>

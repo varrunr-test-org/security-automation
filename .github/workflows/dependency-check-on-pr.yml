@@ -28,6 +28,8 @@ jobs:
     - name: Python Deps
       run: sudo apt-get install -y python-pip && pip install requests
           
+    # Also caches CVE database stored by Dependency-Check
+    # Default path is ~/.m2/repository/org/owasp/dependency-check-data/
     - name: Cache maven artifacts
       uses: actions/cache@v1
       with:
@@ -42,20 +44,11 @@ jobs:
       
     # Build Project
     - name: Maven Build
-      run: mvn -T1C clean install
-    
-    # Cache CVE data downloaded by the tool
-    - name: Cache
-      uses: actions/cache@v1.1.2
-      with:
-        # A directory to store and save the cache
-        path: ./scripts/dependency-check/data
-        # An explicit key for restoring and saving the cache
-        key: dep-check-data
+      run: mvn -T1C clean install  
      
     # Run dependency check
     - name: Run Dependency Check
-      run: ./scripts/dependency-check/bin/dependency-check.sh --failOnCVSS 0 --project "testdep" --scan 'target/*.jar' -o ./scripts/dependency-check/results --format JSON --format HTML --suppression ./scripts/dependency-check/suppression-list.xml
+      run: mvn dependency-check:check
       
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
@@ -63,7 +56,7 @@ jobs:
         # Artifact name
         name: dependency-check-report.json
         # Destination path
-        path: ./scripts/dependency-check/results/dependency-check-report.json
+        path: ./results/dependency-check-report.json
 
     - name: Slack Notify
-      run: python ./scripts/dependency-check/results/parse_dep_check_result.py ./scripts/dependency-check/results/dependency-check-report.json ${{ secrets.slack_webhook_url }}
+      run: python ./dependency-check/parse_dep_check_result.py ./results/dependency-check-report.json ${{ secrets.slack_webhook_url }}

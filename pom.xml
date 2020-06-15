@@ -11,7 +11,6 @@
         <plugins>
 
             <!-- other Maven plugins ... -->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -34,6 +33,28 @@
                 </executions>
 
             </plugin>
+
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>5.3.2</version>
+                <configuration>
+                    <suppressionFiles>
+                        <suppressionFile>./dependency-check/suppression-list.xml</suppressionFile>
+                    </suppressionFiles>
+                    <formats>HTML,JSON</formats>
+                    <outputDirectory>results</outputDirectory>
+                    <prettyPrint>true</prettyPrint>
+                    <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -48,6 +69,11 @@
             <version>8.10</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>5.3.3.RELEASE</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.1</version>
@@ -60,6 +86,7 @@
         </dependency>
         -->
     </dependencies>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
